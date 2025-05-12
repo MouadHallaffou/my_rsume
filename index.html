@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - Mouad Hallaffou</title>
+    <title>CV - Mouad Hallaffou | Développeur Full Stack</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @page {
             size: A4;
@@ -15,8 +17,60 @@
             min-height: 297mm;
             margin: 0 auto;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            color: #333;
+        }
+        .cv-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2c3e50;
+        }
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .project-item, .education-item {
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .print-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
         }
         @media print {
+            .print-button {
+                display: none;
+            }
             body {
                 width: 210mm;
                 height: 297mm;
@@ -24,129 +78,235 @@
             .cv-container {
                 box-shadow: none;
                 margin: 0;
-                border-radius: 0;
+                padding: 15px;
             }
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <div class="cv-container max-w-3xl mx-auto p-8 bg-white shadow-lg my-8 print:my-0 print:shadow-none">
-        <header class="mb-6 border-b pb-4">
-            <h1 class="text-3xl font-bold text-gray-800">MOUAD HALLAFFOU</h1>
-            <p class="mt-1 text-gray-600">Résidence Salwa, Tit Mellil, Casablanca</p>
-            <p class="text-gray-600">+212 678 634 285</p>
-            <p class="text-gray-600">mouadhallaffou@gmail.com</p>
-            <p class="text-gray-600">
-                <a href="https://www.linkedin.com/in/hallaffou-mouad-763409200/" class="text-blue-500 hover:underline">LinkedIn</a> • 
-                <a href="https://github.com/MouadHallaffou" class="text-blue-500 hover:underline">GitHub</a>
-            </p>
-        </header>
+<body class="bg-gray-100">
+    <button onclick="generatePDF()" class="print-button">Télécharger PDF</button>
 
+    <div id="cv-content" class="cv-container bg-white shadow-md">
+        <!-- En-tête avec photo -->
+        <div class="header-section">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">MOUAD HALLAFFOU</h1>
+                <p class="text-lg text-gray-600">Développeur Full Stack</p>
+                <p class="text-gray-600 mt-2">
+                    <span class="font-medium">📍</span> Résidence Salwa, Tit Mellil, Casablanca<br>
+                    <span class="font-medium">📞</span> +212 678 634 285<br>
+                    <span class="font-medium">✉️</span> mouadhallaffou@gmail.com<br>
+                    <span class="font-medium">🔗</span> 
+                    <a href="https://www.linkedin.com/in/hallaffou-mouad-763409200/" class="text-blue-600">LinkedIn</a> • 
+                    <a href="https://github.com/MouadHallaffou" class="text-blue-600">GitHub</a>
+                </p>
+            </div>
+            <img src="me.jpg" alt="Photo Mouad Hallaffou" class="photo" id="profile-photo">
+        </div>
+
+        <!-- Section Résumé -->
         <section class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 border-b pb-1">RÉSUMÉ</h2>
-            <p class="mt-2 text-gray-700">
-                Développeur Full Stack passionné avec des compétences solides en conception et développement d'applications web. 
-                Actuellement en formation à YOUCODE, je maîtrise des technologies modernes telles que React, Laravel, PHP, JavaScript, MySQL, et Tailwind CSS. 
-                Expérimenté dans la gestion de projets Agile/Scrum, j'excelle dans la résolution de problèmes complexes et la livraison de solutions efficaces.
+            <h2 class="section-title text-xl">PROFIL PROFESSIONNEL</h2>
+            <p class="text-gray-700">
+                Développeur Full Stack passionné avec une expertise en conception et développement d'applications web. 
+                Formé à YOUCODE avec maîtrise des technologies modernes (React, Laravel, PHP, JavaScript, MySQL). 
+                Expérience en gestion de projets Agile/Scrum avec une forte capacité à résoudre des problèmes complexes 
+                et livrer des solutions techniques efficaces. Recherche un poste stimulant pour appliquer mes compétences 
+                techniques et contribuer à des projets innovants.
             </p>
         </section>
 
+        <!-- Section Expérience Professionnelle -->
         <section class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 border-b pb-1">PROJETS RÉALISÉS</h2>
-            <ul class="mt-3 text-gray-700 space-y-3">
-                <li>
-                    <div class="font-medium">EasyPrint: Bookstore Platform</div>
-                    <p class="text-sm text-gray-600 italic">Plateforme de gestion et vente en ligne pour librairies et impression à la demande.</p>
-                    <p class="text-sm"><span class="font-medium">Technologies:</span> React, Laravel, MySQL, Tailwind CSS, API RESTful.</p>
-                </li>
-                <li>
-                    <div class="font-medium">eLearning Platform</div>
-                    <p class="text-sm text-gray-600 italic">Plateforme d'apprentissage collaborative pour le mentorat et la formation en ligne.</p>
-                    <p class="text-sm"><span class="font-medium">Frontend:</span> React.js, Tailwind CSS, Redux pour consommer l'API REST.</p>
-                    <p class="text-sm"><span class="font-medium">Backend:</span> Laravel, MySQL, API RESTful, Authentication JWT.</p>
-                </li>
-                <li>
-                    <div class="font-medium">HR Management System</div>
-                    <p class="text-sm text-gray-600 italic">Système de gestion des employés, départements et hiérarchies organisationnelles.</p>
-                    <p class="text-sm"><span class="font-medium">Technologies:</span> Laravel, MySQL, Tailwind CSS, JavaScript, Authentication & Authorization.</p>
-                </li>
-                <li>
-                    <div class="font-medium">The Weekly</div>
-                    <p class="text-sm text-gray-600 italic">Plateforme de publication et commentaires d'annonces et actualités.</p>
-                    <p class="text-sm"><span class="font-medium">Technologies:</span> PHP, MySQL, JavaScript, Tailwind CSS.</p>
-                </li>
-                <li>
-                    <div class="font-medium">Resume Builder - StrucoCV</div>
-                    <p class="text-sm text-gray-600 italic">Générateur de CV interactif permettant la personnalisation et le téléchargement via une interface intuitive.</p>
-                    <p class="text-sm"><span class="font-medium">Technologies:</span> HTML, Tailwind CSS, JavaScript.</p>
-                </li>
-                <li>
-                    <div class="font-medium">Youdemy Platform</div>
-                    <p class="text-sm text-gray-600 italic">Plateforme d'apprentissage en ligne interactive pour étudiants et enseignants.</p>
-                    <p class="text-sm"><span class="font-medium">Technologies:</span> HTML, PHP, MySQL, Tailwind CSS, SASS, JavaScript.</p>
-                </li>
-                <li>
-                    <div class="font-medium">Dev.to Blogging Platform</div>
-                    <p class="text-sm text-gray-600 italic">Système de gestion de contenu pour la création et découverte d'articles techniques.</p>
-                    <p class="text-sm"><span class="font-medium">Technologies:</span> HTML, PHP, Tailwind CSS, SASS, MySQL, JavaScript.</p>
-                </li>
-            </ul>
-        </section>
-
-        <section class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 border-b pb-1">ÉDUCATION</h2>
-            <div class="mt-3 space-y-3">
-                <div>
-                    <div class="flex justify-between">
-                        <p class="font-medium">Formation en Développement Web Full-Stack</p>
-                        <p class="text-gray-600">Depuis Sep 2024</p>
-                    </div>
-                    <p class="text-gray-700">YOUCODE MAROC-UM6P</p>
-                    <p class="text-sm text-gray-600 italic">Technologies étudiées: HTML, CSS, JavaScript, Tailwind, Bootstrap, MySQL, SQL, PHP, Laravel, VueJs, React.</p>
+            <h2 class="section-title text-xl">EXPÉRIENCE PROFESSIONNELLE</h2>
+            
+            <div class="project-item">
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-gray-800">Développeur Full Stack Freelance</h3>
+                    <span class="text-gray-600">2023 - Présent</span>
                 </div>
+                <ul class="list-disc list-inside ml-4 text-gray-700">
+                    <li>Conception et développement d'applications web sur mesure pour divers clients</li>
+                    <li>Mise en œuvre de solutions frontend avec React et Tailwind CSS</li>
+                    <li>Développement d'API RESTful avec Laravel et intégration avec bases de données MySQL</li>
+                    <li>Optimisation des performances et expérience utilisateur</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section Projets -->
+        <section class="mb-6">
+            <h2 class="section-title text-xl">PROJETS TECHNIQUES</h2>
+            
+            <div class="project-item">
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-gray-800">EasyPrint - Plateforme de gestion de librairie</h3>
+                    <span class="text-gray-600">React, Laravel, MySQL</span>
+                </div>
+                <ul class="list-disc list-inside ml-4 text-gray-700">
+                    <li>Développement d'une plateforme complète de gestion et vente en ligne pour librairies</li>
+                    <li>Implémentation d'un système d'impression à la demande avec suivi en temps réel</li>
+                    <li>Création d'une API RESTful sécurisée avec authentification JWT</li>
+                    <li>Optimisation des performances avec lazy loading et pagination</li>
+                </ul>
+            </div>
+
+            <div class="project-item">
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-gray-800">Plateforme eLearning</h3>
+                    <span class="text-gray-600">React, Laravel, MySQL</span>
+                </div>
+                <ul class="list-disc list-inside ml-4 text-gray-700">
+                    <li>Conception d'une plateforme d'apprentissage collaboratif avec système de mentorat</li>
+                    <li>Développement d'un système de vidéoconférence intégré avec WebRTC</li>
+                    <li>Mise en place d'un tableau de bord analytique pour le suivi des progrès</li>
+                    <li>Intégration de paiements en ligne avec Stripe</li>
+                </ul>
+            </div>
+
+            <div class="project-item">
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-gray-800">Système de gestion RH</h3>
+                    <span class="text-gray-600">Laravel, MySQL, Tailwind CSS</span>
+                </div>
+                <ul class="list-disc list-inside ml-4 text-gray-700">
+                    <li>Application complète de gestion des employés et des départements</li>
+                    <li>Implémentation de rôles et permissions avec système hiérarchique</li>
+                    <li>Génération automatisée de rapports et tableaux de bord</li>
+                    <li>Intégration avec Slack pour les notifications</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section Formation -->
+        <section class="mb-6">
+            <h2 class="section-title text-xl">FORMATION</h2>
+            
+            <div class="education-item">
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-gray-800">Formation Développement Web Full Stack</h3>
+                    <span class="text-gray-600">2024 - Présent</span>
+                </div>
+                <p class="text-gray-700">YOUCODE MAROC - UM6P</p>
+                <p class="text-sm text-gray-600">Technologies maîtrisées : HTML5, CSS3, JavaScript (ES6+), React, PHP, Laravel, MySQL, Git, Tailwind CSS, Bootstrap</p>
+            </div>
+
+            <div class="education-item">
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-gray-800">Licence en Économie et Gestion</h3>
+                    <span class="text-gray-600">2019 - 2022</span>
+                </div>
+                <p class="text-gray-700">FSJES Meknès</p>
+                <p class="text-sm text-gray-600">Spécialisation en économie numérique et gestion de projets</p>
+            </div>
+        </section>
+
+        <!-- Section Compétences -->
+        <section class="mb-6">
+            <h2 class="section-title text-xl">COMPÉTENCES TECHNIQUES</h2>
+            
+            <div class="skills-grid">
                 <div>
-                    <div class="flex justify-between">
-                        <p class="font-medium">Licence en Économie et Gestion</p>
-                        <p class="text-gray-600">Sep 2019 - Juin 2022</p>
-                    </div>
-                    <p class="text-gray-700">FSJES Meknès</p>
+                    <h3 class="font-semibold text-gray-800">Frontend</h3>
+                    <ul class="list-disc list-inside ml-4 text-gray-700">
+                        <li>HTML5, CSS3, JavaScript (ES6+)</li>
+                        <li>React.js, Redux, Context API</li>
+                        <li>Tailwind CSS, Bootstrap</li>
+                        <li>Responsive Design</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Backend</h3>
+                    <ul class="list-disc list-inside ml-4 text-gray-700">
+                        <li>PHP, Laravel</li>
+                        <li>API RESTful, JWT Authentication</li>
+                        <li>MySQL, PostgreSQL</li>
+                        <li>Architecture MVC</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Outils & Méthodes</h3>
+                    <ul class="list-disc list-inside ml-4 text-gray-700">
+                        <li>Git, GitHub, GitFlow</li>
+                        <li>Docker, Postman</li>
+                        <li>Agile/Scrum, Jira</li>
+                        <li>CI/CD Basics</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Langues</h3>
+                    <ul class="list-disc list-inside ml-4 text-gray-700">
+                        <li>Arabe (Langue maternelle)</li>
+                        <li>Français (Courant)</li>
+                        <li>Anglais (Technique)</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <section class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 border-b pb-1">COMPÉTENCES</h2>
-            <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
-                <div>
-                    <p class="font-medium">Frontend</p>
-                    <p class="text-gray-700">React, JavaScript, HTML, CSS, Tailwind CSS, Bootstrap</p>
-                </div>
-                <div>
-                    <p class="font-medium">Backend</p>
-                    <p class="text-gray-700">PHP, Laravel, MySQL, SQL</p>
-                </div>
-                <div>
-                    <p class="font-medium">Outils et Méthodologies</p>
-                    <p class="text-gray-700">Git, GitHub, Jira, Trello, Agile/Scrum</p>
-                </div>
-                <div>
-                    <p class="font-medium">Design et Prototypage</p>
-                    <p class="text-gray-700">Figma</p>
-                </div>
-                <div>
-                    <p class="font-medium">Langues</p>
-                    <p class="text-gray-700">Français (professionnel), Anglais (intermédiaire)</p>
-                </div>
-            </div>
-        </section>
-
+        <!-- Section Certifications -->
         <section>
-            <h2 class="text-xl font-semibold text-gray-800 border-b pb-1">CERTIFICATIONS</h2>
-            <ul class="mt-3 text-gray-700 list-disc list-inside">
-                <li>JavaScript – GreatLearning Academy</li>
-                <li>MySQL – GreatLearning Academy</li>
+            <h2 class="section-title text-xl">CERTIFICATIONS</h2>
+            <ul class="list-disc list-inside ml-4 text-gray-700">
+                <li>JavaScript Avancé - GreatLearning Academy</li>
+                <li>MySQL pour Développeurs - GreatLearning Academy</li>
+                <li>Introduction à React - Udemy</li>
+                <li>Principes Agile/Scrum - LinkedIn Learning</li>
+                <li>Responsive Web Design - freeCodeCamp</li>
             </ul>
         </section>
     </div>
+
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            const options = {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                logging: true,
+                letterRendering: true
+            };
+            html2canvas(document.getElementById('cv-content'), options).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                doc.save('CV_Mouad_Hallaffou.pdf');
+            });
+        }
+        document.getElementById('profile-photo').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    document.getElementById('profile-photo').src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+            input.click();
+        });
+    </script>
 </body>
 </html>
